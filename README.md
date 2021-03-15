@@ -1,6 +1,10 @@
 ## Tech-Blog-MVC
 My solution to Week 14 Challenge
 
+## Deployed Heroku Link
+
+
+
 ## User story
 
 A CMS-style blog site similar to a Wordpress site, where developers can publish their blog posts and comment on other deevelopers' posts as well.
