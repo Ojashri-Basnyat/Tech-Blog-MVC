@@ -1,26 +1,43 @@
 const express = require('express')
-const mongoose = require('mongoose')
-const articleRouter = require('./routes/articles')
-const app = express()
+const routes = require('./controllers');
+const sequelize = require('./config/connection');
+const path = require('path');
 
-mongoose.connect('mongodb://localhost/local', { useNewUrlParser: true, useUnifiedTopology: true})
+const helpers = require('./utils/helpers');
 
-app.set('view engine', 'ejs')
+const exphbs = require('express-handlebars');
+const hbs = exphbs.create({ helpers });
 
-app.use('/articles', articleRouter)
+const session = require('express-session');
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-app.get('/', (req,res) => {
-    const articles = [{
-        title: 'Test Article',
-        createdAt: new Date(),
-        description: 'Test description'
-    },
-    {
-        title: 'Test Article 2',
-        createdAt: new Date(),
-        description: 'Test description 2'
-    }]
-    res.render('articles/index', { articles: articles })
-})
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-app.listen(5000)
+const sess = {
+  secret: 'Harry Potter',
+  cookie: {
+        expires: 10 * 60 * 1000
+  },
+  resave: true,
+  rolling: true,
+  saveUninitialized: true,
+  store: new SequelizeStore({
+    db: sequelize
+  }),
+};
+
+app.use(session(sess));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
+app.use(routes);
+
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => console.log('Now listening'));
+});
