@@ -1,3 +1,4 @@
+// Jawsdb settings
 const Sequelize = require('sequelize');
 
 require('dotenv').config();

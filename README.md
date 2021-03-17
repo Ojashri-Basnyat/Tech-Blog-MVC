@@ -2,7 +2,7 @@
 My solution to Week 14 Challenge
 
 ## Deployed Heroku Link
-
+https://tech-blog-mvc-ojashri.herokuapp.com
 
 
 ## User story
